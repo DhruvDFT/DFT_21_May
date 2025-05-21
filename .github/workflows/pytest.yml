@@ -1,0 +1,28 @@
+name: Autograde DFT Assignment
+
+on:               # run on every push and pull request
+  push:
+  pull_request:
+
+jobs:
+  test-all-sets:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4        # 1. pull repo contents
+
+      - name: Set up Python
+        uses: actions/setup-python@v5    # 2. choose Python version
+        with:
+          python-version: '3.11'
+
+      - name: Install requirements
+        run: |
+          pip install -r DFT_Assignments/requirements.txt   # 3. install pytest
+
+      - name: Run pytest for each set
+        run: |
+          for dir in DFT_Assignments/set*/ ; do             # 4. loop all sets
+            echo "=== $dir ==="
+            pytest -q "$dir"
+          done
